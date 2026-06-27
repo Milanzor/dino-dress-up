@@ -131,7 +131,7 @@ export class AudioService {
 
     try {
       const howl = new Howl({
-        src: [clip.file],
+        src: [this.resolveSrc(clip.file)],
         loop: true,
         volume: clip.volume ?? 0.4,
         html5: true,
@@ -304,13 +304,23 @@ export class AudioService {
     let howl = this.howls.get(clipId)
     if (!howl) {
       howl = new Howl({
-        src: [clip.file as string],
+        src: [this.resolveSrc(clip.file as string)],
         loop: !!clip.loop,
         volume: clip.volume ?? 1,
       })
       this.howls.set(clipId, howl)
     }
     return howl
+  }
+
+  /**
+   * Resolve a manifest `file` to a URL that works both in dev (base `/`) and on
+   * GitHub Pages (base `/dino-dress-up/`). Absolute http(s) urls pass through.
+   */
+  private resolveSrc(file: string): string {
+    if (file.startsWith('http')) return file
+    const base = import.meta.env.BASE_URL
+    return base + file.replace(/^\//, '')
   }
 
   private stopAmbient(): void {

@@ -125,42 +125,56 @@ export interface RigManifest {
   }
 }
 
+// Real assets: Quaternius "Animated Dinosaurs" pack (CC0). Each is a single
+// skinned mesh sharing a 29-bone rig with bones named Head/Back/Neck and clips
+// named `Armature|<Species>_<Idle|Walk|Run|Jump|Attack|Death>`. DinoFactory
+// normalizes each model's native height (rex≈14.7, trike≈8.9, bronto≈11.0 units)
+// down to `height` below, so these are the desired *world* heights (as with the
+// procedural path). Socket `scale` inverts the ~32x (bronto ~60x) bone world
+// scale so the procedural accessory meshes mount at roughly unit size; the
+// socket positions are approximate nudges in bone-local space — tune visually.
 export const RIGS: Record<Species, RigManifest> = {
   rex: {
-    url: null,
+    url: 'models/rex.glb',
     height: 1.6,
-    materialSlots: { body: ['body'], belly: ['belly'] },
-    bones: { head: 'Head', back: 'Spine', neck: 'Neck' },
+    // Trex materials: LightGreen/Green(body), LightYellow(belly), Black(eyes),
+    // Red(mouth/claws). Body recolors; belly tints; eyes/mouth are kept.
+    materialSlots: { body: ['LightGreen', 'Green'], belly: ['LightYellow'] },
+    bones: { head: 'Head', back: 'Back', neck: 'Neck' },
     sockets: {
-      head: { position: [0, 1.45, 0.25], rotation: [0, 0, 0], scale: 1 },
-      back: { position: [0, 1.05, -0.15], rotation: [0, 0, 0], scale: 1 },
-      neck: { position: [0, 1.1, 0.18], rotation: [0, 0, 0], scale: 1 },
+      head: { position: [0, 0.008, 0.002], rotation: [0, 0, 0], scale: 0.031 },
+      back: { position: [0, 0.006, 0], rotation: [0, 0, 0], scale: 0.031 },
+      neck: { position: [0, 0.004, 0.003], rotation: [0, 0, 0], scale: 0.031 },
     },
-    clips: { idle: 'Idle', walk: 'Walk', happy: 'Jump' },
+    clips: { idle: 'Armature|TRex_Idle', walk: 'Armature|TRex_Walk', happy: 'Armature|TRex_Jump' },
   },
   trike: {
-    url: null,
+    url: 'models/trike.glb',
     height: 1.4,
-    materialSlots: { body: ['body'], belly: ['belly'] },
-    bones: { head: 'Head', back: 'Spine', neck: 'Neck' },
+    // Triceratops: 'Purple' is the main body area (recolors); Brown/LightBrown
+    // (horns/beak/feet) are kept as darker accents.
+    materialSlots: { body: ['Purple'], belly: [] },
+    bones: { head: 'Head', back: 'Back', neck: 'Neck' },
     sockets: {
-      head: { position: [0, 1.2, 0.55], rotation: [0, 0, 0], scale: 1.1 },
-      back: { position: [0, 1.0, -0.2], rotation: [0, 0, 0], scale: 1 },
-      neck: { position: [0, 0.95, 0.3], rotation: [0, 0, 0], scale: 1 },
+      head: { position: [0, 0.008, 0.004], rotation: [0, 0, 0], scale: 0.032 },
+      back: { position: [0, 0.006, 0], rotation: [0, 0, 0], scale: 0.032 },
+      neck: { position: [0, 0.004, 0.003], rotation: [0, 0, 0], scale: 0.032 },
     },
-    clips: { idle: 'Idle', walk: 'Walk', happy: 'Jump' },
+    clips: { idle: 'Armature|Triceratops_Idle', walk: 'Armature|Triceratops_Walk', happy: 'Armature|Triceratops_Jump' },
   },
   bronto: {
-    url: null,
+    url: 'models/bronto.glb',
     height: 2.2,
-    materialSlots: { body: ['body'], belly: ['belly'] },
-    bones: { head: 'Head', back: 'Spine', neck: 'Neck' },
+    // Apatosaurus: 'Brown' is the main body (recolors); 'Material' is the
+    // lighter underside → belly tint.
+    materialSlots: { body: ['Brown'], belly: ['Material'] },
+    bones: { head: 'Head', back: 'Back', neck: 'Neck' },
     sockets: {
-      head: { position: [0, 2.1, 0.6], rotation: [0, 0, 0], scale: 1 },
-      back: { position: [0, 1.4, -0.2], rotation: [0, 0, 0], scale: 1.2 },
-      neck: { position: [0, 1.6, 0.4], rotation: [0, 0, 0], scale: 1 },
+      head: { position: [0, 0.004, 0.002], rotation: [0, 0, 0], scale: 0.017 },
+      back: { position: [0, 0.004, 0], rotation: [0, 0, 0], scale: 0.017 },
+      neck: { position: [0, 0.003, 0.002], rotation: [0, 0, 0], scale: 0.017 },
     },
-    clips: { idle: 'Idle', walk: 'Walk', happy: 'Jump' },
+    clips: { idle: 'Armature|Apatosaurus_Idle', walk: 'Armature|Apatosaurus_Walk', happy: 'Armature|Apatosaurus_Jump' },
   },
 }
 

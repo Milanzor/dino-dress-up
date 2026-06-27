@@ -164,24 +164,53 @@ export class DinoFactory {
   // ── glTF path (dormant until RIGS.url is set) ─────────────────────────────
   private async buildFromGLTF(species: Species, url: string): Promise<DinoParts> {
     const rig = RIGS[species]
-    const gltf: GLTF = await this.loader.loadGLTF(url)
+    // url has no leading slash; resolve against the deploy base (BASE_URL is
+    // '/' in dev and '/dino-dress-up/' on GitHub Pages) so it loads in both.
+    const gltf: GLTF = await this.loader.loadGLTF(import.meta.env.BASE_URL + url)
     const root = cloneSkinned(gltf.scene) as THREE.Object3D
     root.name = `dino:${species}`
 
-    // Map material slots by mesh/material name; clone before editing so the
-    // cached source materials stay pristine.
+    // Normalize the model's native height to the rig's target world height —
+    // the glTF analog of the procedural path's rig.height/REF_HEIGHT scaling —
+    // so real assets (authored tens of units tall) drop in at the scale the
+    // camera, world and accessory sockets expect.
+    root.updateMatrixWorld(true)
+    const bounds = new THREE.Box3().setFromObject(root, true)
+    const nativeHeight = bounds.max.y - bounds.min.y
+    if (nativeHeight > 1e-4) root.scale.setScalar(rig.height / nativeHeight)
+
+    // Map each source material by NAME → recolorable body/belly toon material,
+    // or a "kept" toon material that preserves the model's original colour
+    // (eyes, mouth, frill, claws). This keeps the Quaternius dinos' built-in
+    // multi-tone charm while still recolouring the body to the child's choice.
+    // (Clone-on-edit: we build fresh toon materials, never mutate the cache.)
     const bodyMaterials: THREE.MeshToonMaterial[] = []
     const bellyMaterials: THREE.MeshToonMaterial[] = []
+    const wantBody = new Set(rig.materialSlots.body)
     const wantBelly = new Set(rig.materialSlots.belly)
+    const hasSlots = wantBody.size > 0 || wantBelly.size > 0
     root.traverse((o) => {
       const mesh = o as THREE.Mesh
       if (!mesh.isMesh) return
       mesh.castShadow = true
-      const toon = makeToonMaterial('#ffffff')
-      const name = (Array.isArray(mesh.material) ? mesh.material[0]?.name : mesh.material?.name) || mesh.name
-      if (wantBelly.has(name)) bellyMaterials.push(toon)
-      else bodyMaterials.push(toon)
-      mesh.material = toon
+      const srcMats = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+      const mapped = srcMats.map((orig) => {
+        const name = (orig as THREE.Material)?.name ?? ''
+        if (wantBelly.has(name)) {
+          const t = makeToonMaterial('#ffffff')
+          bellyMaterials.push(t)
+          return t
+        }
+        if (wantBody.has(name) || !hasSlots) {
+          const t = makeToonMaterial('#ffffff')
+          bodyMaterials.push(t)
+          return t
+        }
+        // Kept material — toon-ify but preserve its authored colour.
+        const c = (orig as THREE.MeshStandardMaterial)?.color
+        return makeToonMaterial(c ? `#${c.getHexString()}` : '#cccccc')
+      })
+      mesh.material = Array.isArray(mesh.material) ? mapped : mapped[0]
     })
 
     // Bones → sockets (accessories follow animation for free).

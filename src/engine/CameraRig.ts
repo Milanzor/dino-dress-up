@@ -16,8 +16,11 @@ export class CameraRig {
   private mode: CameraMode = 'follow'
 
   // Follow tuning: sit BEHIND the dino (local -z) and above, looking at it.
-  // The dino's forward is local +z, so "behind" is negative z.
-  private followOffset = new THREE.Vector3(0, 3.2, -6.2)
+  // The dino's forward is local +z, so "behind" is negative z. The offset is
+  // scaled to the dino's height (see setFollowFraming) so a tall Bronto doesn't
+  // fill the frame.
+  private followBaseOffset = new THREE.Vector3(0, 3.2, -6.2)
+  private followOffset = this.followBaseOffset.clone()
   private followLookHeight = 1.2
   private posDamp = 3.5
   private lookDamp = 6
@@ -43,6 +46,13 @@ export class CameraRig {
   setMode(mode: CameraMode): void {
     this.mode = mode
     if (mode === 'showcase') this.showcaseAngle = 0
+  }
+
+  /** Pull the follow camera back/up for taller dinos so they stay framed. */
+  setFollowFraming(dinoHeight: number): void {
+    const k = THREE.MathUtils.clamp(dinoHeight / 1.6, 0.85, 1.7)
+    this.followOffset.copy(this.followBaseOffset).multiplyScalar(k)
+    this.followLookHeight = 1.2 * k
   }
 
   /** Size the turntable orbit to the dino so any species frames cleanly. */

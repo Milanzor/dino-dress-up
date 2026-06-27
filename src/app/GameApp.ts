@@ -282,6 +282,7 @@ export class GameApp {
     this.currentBounds = desc.bounds
     this.state.setScene(desc.id)
     this.camera.setTarget(this.dino.object3d)
+    this.camera.setFollowFraming(this.dino.parts.height)
     this.camera.snap()
     this.audio.ambient(desc.ambient ?? null)
   }
