@@ -10,6 +10,7 @@
 import type { SceneDescriptor } from '@/story/SceneDescriptor'
 
 export const SCENES: Record<string, SceneDescriptor> = {
+  // Chapter 1: Thuis — home nest (title backdrop + creator stage).
   nest: {
     id: 'nest',
     environment: 'nest',
@@ -19,8 +20,9 @@ export const SCENES: Record<string, SceneDescriptor> = {
     ambient: 'ambient_home',
     palette: { ground: '#9bd67a', accent: '#b08a5a' },
   },
-  fork: {
-    id: 'fork',
+  // Chapter 2: De Wijde Wereld In — goodbye + the fork.
+  wereld: {
+    id: 'wereld',
     environment: 'meadow',
     lighting: 'day',
     spawn: { position: [0, 0, 4], rotationY: Math.PI },
@@ -32,8 +34,9 @@ export const SCENES: Record<string, SceneDescriptor> = {
       { id: 'path_river', position: [5, 0, -3], radius: 1.6 },
     ],
   },
-  meadow: {
-    id: 'meadow',
+  // Chapter 3: Bloemenwei — help Trix + the shell.
+  wei: {
+    id: 'wei',
     environment: 'meadow',
     lighting: 'day',
     spawn: { position: [0, 0, 5], rotationY: Math.PI },
@@ -41,8 +44,9 @@ export const SCENES: Record<string, SceneDescriptor> = {
     ambient: 'ambient_meadow',
     palette: { ground: '#86d96a', accent: '#ff7ab6' },
   },
-  river: {
-    id: 'river',
+  // Chapter 4: Rivier — crossing + baby Ptera.
+  rivier: {
+    id: 'rivier',
     environment: 'river',
     lighting: 'day',
     spawn: { position: [0, 0, 5], rotationY: Math.PI },
@@ -50,6 +54,47 @@ export const SCENES: Record<string, SceneDescriptor> = {
     ambient: 'ambient_river',
     palette: { ground: '#a9d98a', accent: '#5fb8ff' },
   },
+  // Chapter 5a: Fluisterbos — cozy woods.
+  bos: {
+    id: 'bos',
+    environment: 'forest',
+    lighting: 'day',
+    spawn: { position: [0, 0, 5], rotationY: Math.PI },
+    bounds: { x: 12, z: 12 },
+    ambient: 'ambient_forest',
+    palette: { ground: '#5fa85a', accent: '#7fd07a' },
+  },
+  // Chapter 5b: Glittergrotten — crystal colour match.
+  grot: {
+    id: 'grot',
+    environment: 'cave',
+    lighting: 'cave',
+    spawn: { position: [0, 0, 5], rotationY: Math.PI },
+    bounds: { x: 10, z: 10 },
+    ambient: 'ambient_cave',
+    palette: { ground: '#3a3358', accent: '#b48cff' },
+  },
+  // Chapter 6: De Verrassing — sudden rain.
+  regen: {
+    id: 'regen',
+    environment: 'meadow',
+    lighting: 'rain',
+    spawn: { position: [0, 0, 5], rotationY: Math.PI },
+    bounds: { x: 11, z: 11 },
+    ambient: 'ambient_rain',
+    palette: { ground: '#7bbf6a', accent: '#9fc6e8' },
+  },
+  // Chapter 7: Klaarmaken — pick your act.
+  klaar: {
+    id: 'klaar',
+    environment: 'festival',
+    lighting: 'sunset',
+    spawn: { position: [0, 0, 6], rotationY: Math.PI },
+    bounds: { x: 12, z: 12 },
+    ambient: 'ambient_festival',
+    palette: { ground: '#9bd67a', accent: '#ffb86b' },
+  },
+  // Chapter 8: Het Grote Dino Feest — the finale.
   festival: {
     id: 'festival',
     environment: 'festival',
