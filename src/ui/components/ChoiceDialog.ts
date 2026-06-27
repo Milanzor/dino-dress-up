@@ -20,20 +20,33 @@ export interface ChoiceDialogOpts {
   onChoose: (index: number) => void
 }
 
-/** Friendly emoji fallbacks for known icon ids (when the SVG is missing). */
+/** Friendly emoji fallbacks for known icon ids (when the SVG is missing).
+ *  Covers every icon id used across the full story — pre-readers must always
+ *  see a picture, never a letter. */
 const ICON_EMOJI: Record<string, string> = {
-  ball: '⚽',
-  butterfly: '🦋',
-  meadow: '🌸',
-  river: '💦',
-  hat: '👒',
-  sunhat: '👒',
-  cape: '🧥',
-  raincape: '🧥',
-  crown: '👑',
-  stones: '🪨',
-  bronto: '🦕',
-  search: '🔍',
+  // wake up
+  stretch: '🙆', bounce: '🤸', yawn: '🥱',
+  // breakfast
+  bessen: '🫐', groen: '🥬', zaden: '🌰',
+  // get dressed / accessories
+  hat: '👒', sunhat: '👒', cape: '🧥', raincape: '🧥', crown: '👑',
+  rugzak: '🎒', explorerpack: '🎒', scarf: '🧣',
+  // goodbye + companions
+  mama: '👩', papa: '👨', pip: '🐣',
+  // fork + places
+  meadow: '🌸', river: '💦',
+  // meadow / Trix
+  search: '🔍', butterfly: '🦋', snack: '🍓', ball: '⚽',
+  shell: '🐚', keep: '🤲', share: '🤝',
+  // river crossing + Ptera
+  stones: '🪨', log: '🪵', bronto: '🦕',
+  ramp: '🛝', call: '📣', carry: '🤗', ptera: '🦅',
+  // forest + cave
+  paw: '🐾', hum: '🎵', lantern: '🏮', crystal: '💎',
+  // rain
+  umbrella: '☂️', huddle: '🤗', song: '🎶',
+  // the act
+  dans: '💃', zang: '🎤', mode: '👗', vrienden: '🫂',
 }
 
 function iconVisual(iconId: string): HTMLElement {

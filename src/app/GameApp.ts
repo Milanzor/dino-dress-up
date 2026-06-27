@@ -90,8 +90,7 @@ export class GameApp {
     // A gently turn-tabling dino behind the title for charm.
     this.dino = await this.factory.build(this.state.get().character)
     this.loadScene('nest')
-    this.camera.setMode('showcase')
-    this.camera.snap()
+    this.frameShowcaseDino()
 
     this.goTitle()
   }
@@ -138,8 +137,7 @@ export class GameApp {
 
     await this.swapDino(this.draft)
     this.loadScene('nest')
-    this.camera.setMode('showcase')
-    this.camera.snap()
+    this.frameShowcaseDino()
     this.setRoamLocked(true)
 
     this.ui.showCreator({
@@ -156,6 +154,7 @@ export class GameApp {
     // change returns false and needs a fresh build.
     if (!this.factory.apply(this.dino, draft)) {
       await this.swapDino(draft)
+      this.frameShowcaseDino() // re-center + re-frame the new species
     }
   }
 
@@ -300,6 +299,17 @@ export class GameApp {
     } finally {
       this.rebuilding = false
     }
+  }
+
+  /** Center the dino at the origin and frame the turntable to its height. */
+  private frameShowcaseDino(): void {
+    if (!this.dino) return
+    this.dino.setPosition(0, 0, 0)
+    this.dino.setHeading(0.6) // gentle 3/4 starting view
+    this.camera.setTarget(this.dino.object3d)
+    this.camera.setShowcaseFraming(this.dino.parts.height)
+    this.camera.setMode('showcase')
+    this.camera.snap()
   }
 
   /** Lock/unlock free-roam; touch controls only show while roaming. */

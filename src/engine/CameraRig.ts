@@ -15,16 +15,18 @@ export class CameraRig {
   private target: THREE.Object3D | null = null
   private mode: CameraMode = 'follow'
 
-  // Follow tuning: sit behind (+z) and above, look slightly ahead/down.
-  private followOffset = new THREE.Vector3(0, 3.2, 6.2)
+  // Follow tuning: sit BEHIND the dino (local -z) and above, looking at it.
+  // The dino's forward is local +z, so "behind" is negative z.
+  private followOffset = new THREE.Vector3(0, 3.2, -6.2)
   private followLookHeight = 1.2
   private posDamp = 3.5
   private lookDamp = 6
   private currentLook = new THREE.Vector3()
 
-  // Showcase tuning.
+  // Showcase tuning (defaults; sized to the dino via setShowcaseFraming).
   private showcaseRadius = 5.0
   private showcaseHeight = 2.2
+  private showcaseLookHeight = 0.9
   private showcaseAngle = 0
   private showcaseSpeed = 0.35 // rad/s
 
@@ -41,6 +43,13 @@ export class CameraRig {
   setMode(mode: CameraMode): void {
     this.mode = mode
     if (mode === 'showcase') this.showcaseAngle = 0
+  }
+
+  /** Size the turntable orbit to the dino so any species frames cleanly. */
+  setShowcaseFraming(dinoHeight: number): void {
+    this.showcaseRadius = Math.max(4.2, dinoHeight * 2.7 + 1.8)
+    this.showcaseHeight = dinoHeight * 0.7 + 0.5
+    this.showcaseLookHeight = dinoHeight * 0.5
   }
 
   /** Jump straight to the ideal pose (use on scene load to avoid a swoop). */
@@ -87,7 +96,7 @@ export class CameraRig {
     const cx = t.position.x + Math.sin(this.showcaseAngle) * this.showcaseRadius
     const cz = t.position.z + Math.cos(this.showcaseAngle) * this.showcaseRadius
     this.camera.position.set(cx, t.position.y + this.showcaseHeight, cz)
-    const look = t.position.clone().setY(t.position.y + 0.9)
+    const look = t.position.clone().setY(t.position.y + this.showcaseLookHeight)
     this.currentLook.lerp(look, 1 - Math.exp(-this.lookDamp * dt))
     this.camera.lookAt(this.currentLook)
   }
