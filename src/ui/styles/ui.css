@@ -1,0 +1,556 @@
+/*
+ * ui.css — the one stylesheet for the HTML overlay.
+ *
+ * Toddler-app aesthetic: bright, rounded, chunky, high-contrast, big friendly
+ * system-ui type. Panels opt back into pointer events (the #ui-root is
+ * non-interactive). Safe-area insets are respected so nothing hides under a
+ * notch. Transitions are gentle; the choice glow pulses softly.
+ */
+
+:root {
+  /* ── Palette ──────────────────────────────────────────────────────────── */
+  --c-sky: #8ed0ff;
+  --c-sky-deep: #4ea8ff;
+  --c-sun: #ffd93d;
+  --c-leaf: #7ed957;
+  --c-berry: #ff8fc8;
+  --c-grape: #b07cff;
+  --c-coral: #ff6b6b;
+
+  --c-surface: #ffffff;
+  --c-surface-soft: #f3f8ff;
+  --c-ink: #2b2440;
+  --c-ink-soft: #6b6480;
+  --c-line: #e2e9f5;
+
+  --c-primary: #ff7a3d;
+  --c-primary-press: #ef6321;
+  --c-confirm: #5fd068;
+  --c-select: #ffd93d;
+
+  /* ── Shape & motion ───────────────────────────────────────────────────── */
+  --r-lg: 32px;
+  --r-md: 24px;
+  --r-sm: 16px;
+  --shadow-soft: 0 10px 24px rgba(43, 36, 64, 0.18);
+  --shadow-press: 0 4px 10px rgba(43, 36, 64, 0.22);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ── Safe-area insets ─────────────────────────────────────────────────── */
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+}
+
+/* Every panel mounts under #ui-root (pointer-events:none) and re-enables its
+   own interactivity here. */
+.ui-panel {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color: var(--c-ink);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.ui-panel button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ── Generic chunky primary button ──────────────────────────────────────── */
+.big-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  background: var(--c-primary);
+  color: #fff;
+  border: 6px solid rgba(255, 255, 255, 0.65);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-soft);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  transition:
+    transform 140ms var(--ease),
+    box-shadow 140ms var(--ease),
+    background 140ms var(--ease);
+}
+
+.big-btn:active {
+  transform: translateY(3px) scale(0.98);
+  box-shadow: var(--shadow-press);
+  background: var(--c-primary-press);
+}
+
+/* ── Reusable icon visual (img with coloured emoji fallback) ─────────────── */
+.ui-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.ui-icon-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-sm);
+  background: var(--c-surface-soft);
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.ui-icon-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: var(--r-sm);
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   TITLE SCREEN
+   ════════════════════════════════════════════════════════════════════════ */
+.title-screen {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: calc(var(--safe-t) + 2rem) var(--safe-r) calc(var(--safe-b) + 2rem)
+    var(--safe-l);
+  background: radial-gradient(
+    120% 120% at 50% 0%,
+    rgba(255, 255, 255, 0.35),
+    rgba(142, 208, 255, 0.15) 60%,
+    rgba(142, 208, 255, 0) 100%
+  );
+}
+
+.title-mascot {
+  font-size: clamp(4rem, 16vh, 9rem);
+  filter: drop-shadow(0 8px 12px rgba(43, 36, 64, 0.25));
+  animation: bob 2.6s var(--ease) infinite;
+}
+
+.title-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4em;
+  margin: 0;
+  text-align: center;
+  line-height: 0.95;
+}
+
+.title-word {
+  font-size: clamp(2.6rem, 9vw, 5.5rem);
+  font-weight: 900;
+  color: #fff;
+  padding: 0.05em 0.25em;
+  border-radius: var(--r-md);
+  text-shadow: 0 3px 0 rgba(43, 36, 64, 0.18);
+}
+
+.title-word:nth-child(1) {
+  background: var(--c-leaf);
+  transform: rotate(-3deg);
+}
+.title-word:nth-child(2) {
+  background: var(--c-berry);
+  transform: rotate(2deg);
+}
+.title-word:nth-child(3) {
+  background: var(--c-sky-deep);
+  transform: rotate(-1.5deg);
+}
+
+.title-play {
+  font-size: clamp(1.4rem, 5vw, 2.4rem);
+  padding: 1rem 2.4rem;
+  min-height: 88px;
+  animation: pulse-soft 2.4s ease-in-out infinite;
+}
+
+.title-play-icon {
+  font-size: 1.2em;
+}
+
+/* Parent-gated reset */
+.reset-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.reset-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 0.6rem 1.4rem;
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--c-ink-soft);
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: var(--shadow-press);
+}
+
+.reset-btn.holding {
+  color: var(--c-ink);
+}
+
+.reset-label {
+  position: relative;
+  z-index: 1;
+}
+
+.hold-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0%;
+  background: var(--c-coral);
+  opacity: 0.45;
+  z-index: 0;
+}
+
+.reset-hint {
+  font-size: 0.85rem;
+  color: var(--c-ink-soft);
+  opacity: 0.8;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   CHARACTER CREATOR  (edge-hugging: left rail + bottom sheet, center clear)
+   ════════════════════════════════════════════════════════════════════════ */
+.creator {
+  /* The root panel stays non-interactive so taps on the dino pass through;
+     only the rail + sheet below opt in. */
+}
+
+.creator-rail {
+  pointer-events: auto;
+  position: absolute;
+  top: 50%;
+  left: calc(var(--safe-l) + 0.75rem);
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(6px);
+}
+
+.rail-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  width: 84px;
+  min-height: 84px;
+  padding: 0.5rem 0.25rem;
+  border-radius: var(--r-md);
+  background: var(--c-surface-soft);
+  color: var(--c-ink-soft);
+  transition:
+    transform 120ms var(--ease),
+    background 120ms var(--ease),
+    color 120ms var(--ease);
+}
+
+.rail-btn:active {
+  transform: scale(0.95);
+}
+
+.rail-btn.active {
+  background: var(--c-sun);
+  color: var(--c-ink);
+  box-shadow: var(--shadow-press);
+}
+
+.rail-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.rail-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.creator-sheet {
+  pointer-events: auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  padding: 1rem calc(var(--safe-r) + 1rem) calc(var(--safe-b) + 1rem)
+    calc(var(--safe-l) + 1rem);
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 0.96),
+    rgba(255, 255, 255, 0.82) 70%,
+    rgba(255, 255, 255, 0)
+  );
+}
+
+.sheet-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.25rem;
+}
+
+.sheet-options {
+  display: flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.sheet-groups {
+  display: flex;
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.sheet-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-right: 1.25rem;
+  border-right: 3px dashed var(--c-line);
+}
+
+.sheet-group:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.group-head {
+  font-size: 1.6rem;
+  line-height: 1;
+  align-self: center;
+}
+
+.opt-btn {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 96px;
+  min-height: 96px;
+  padding: 0.6rem;
+  border-radius: var(--r-md);
+  background: var(--c-surface);
+  border: 4px solid var(--c-line);
+  box-shadow: var(--shadow-press);
+  transition:
+    transform 120ms var(--ease),
+    border-color 140ms var(--ease),
+    box-shadow 140ms var(--ease);
+}
+
+.opt-btn:active {
+  transform: scale(0.95);
+}
+
+.opt-btn.selected {
+  border-color: var(--c-select);
+  box-shadow:
+    0 0 0 4px rgba(255, 217, 61, 0.45),
+    var(--shadow-soft);
+}
+
+.opt-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--c-ink-soft);
+}
+
+.swatch {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.7);
+}
+
+.klaar-btn {
+  flex: 0 0 auto;
+  background: var(--c-confirm);
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  padding: 1rem 1.8rem;
+  min-height: 96px;
+}
+
+.klaar-btn:active {
+  background: #49ba53;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   CHOICE DIALOG
+   ════════════════════════════════════════════════════════════════════════ */
+.choice-dialog {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 calc(var(--safe-r) + 1rem) calc(var(--safe-b) + 1.5rem)
+    calc(var(--safe-l) + 1rem);
+  /* Soft scrim that keeps the dino visible. */
+  background: linear-gradient(
+    to top,
+    rgba(43, 36, 64, 0.28),
+    rgba(43, 36, 64, 0) 45%
+  );
+}
+
+.choice-row {
+  pointer-events: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+  max-width: 100%;
+}
+
+.choice-btn {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 128px;
+  height: 128px;
+  padding: 1rem;
+  background: var(--c-surface);
+  border: 6px solid #fff;
+}
+
+.choice-btn .ui-icon {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.choice-btn .ui-icon-fallback {
+  font-size: 3rem;
+}
+
+.choice-btn.selected {
+  border-color: var(--c-select);
+  animation: glow-pulse 1.3s ease-in-out infinite;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   HUD
+   ════════════════════════════════════════════════════════════════════════ */
+.hud {
+  /* root non-interactive; only the button opts in */
+}
+
+.hud-menu-btn {
+  pointer-events: auto;
+  position: absolute;
+  top: calc(var(--safe-t) + 0.75rem);
+  right: calc(var(--safe-r) + 0.75rem);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--c-ink-soft);
+  box-shadow: var(--shadow-press);
+  transition: transform 120ms var(--ease);
+}
+
+.hud-menu-btn:active {
+  transform: scale(0.94);
+}
+
+.hud-menu-btn.holding {
+  color: var(--c-ink);
+}
+
+.hud-menu-btn .hold-fill {
+  border-radius: 50%;
+  background: var(--c-sky-deep);
+  opacity: 0.4;
+}
+
+.hud-menu-icon {
+  position: relative;
+  z-index: 1;
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   MOTION
+   ════════════════════════════════════════════════════════════════════════ */
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(255, 217, 61, 0.5),
+      0 0 18px 4px rgba(255, 217, 61, 0.55),
+      var(--shadow-soft);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px rgba(255, 217, 61, 0.7),
+      0 0 30px 10px rgba(255, 217, 61, 0.75),
+      var(--shadow-soft);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .title-mascot,
+  .title-play,
+  .choice-btn.selected {
+    animation: none;
+  }
+}

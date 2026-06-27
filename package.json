@@ -1,0 +1,27 @@
+{
+  "name": "dino-dress-up",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Dino Dagje Uit — a Dutch low-poly 3D dino dress-up story for pre-readers (ages 3-5)",
+  "scripts": {
+    "compile-ink": "node tools/compile-ink.mjs",
+    "predev": "node tools/compile-ink.mjs",
+    "dev": "vite",
+    "prebuild": "node tools/compile-ink.mjs",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "howler": "^2.2.4",
+    "inkjs": "^2.3.0",
+    "three": "^0.171.0"
+  },
+  "devDependencies": {
+    "@types/howler": "^2.2.12",
+    "@types/three": "^0.171.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.0"
+  }
+}
